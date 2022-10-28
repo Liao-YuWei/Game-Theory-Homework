@@ -13,7 +13,7 @@ def add_node_weight(G, node_num):
         weights[node] = random.randint(0,node_num-1)
     nx.set_node_attributes(G, weights, name='weight')
 
-    return weights
+    return
 
 #calculate prioity for each node 
 def calculate_node_priority(G, node_num):
@@ -28,16 +28,16 @@ def calculate_node_priority(G, node_num):
             priorities[node] = 0
     nx.set_node_attributes(G, priorities, name='priority')
 
-    return priorities
+    return
 
 #randomly initialize strategy profile
 def initialize_strategy_profile(G, node_num):
-    profile = {}
+    strategy_profile = {}
     for node in range(node_num):
-        profile[node] = random.randint(0,1)
-    nx.set_node_attributes(G, profile, name='strategy')
+        strategy_profile[node] = random.randint(0,1)
+    nx.set_node_attributes(G, strategy_profile, name='strategy')
 
-    return profile
+    return
 
 #find node set that its strategy is not best response in weighted MIS, store node as key, best response as value
 def find_waiting_node_MIS(G, node_num):
@@ -150,10 +150,9 @@ for p in range(5):
     for i in range(100):
         #create watts_strogatz model with 30 nodes, 4 links for each node initially
         G = nx.watts_strogatz_graph(n = NODE_NUM, k = LINK_NUM, p = probability[p])
-        adjacency = nx.to_numpy_array(G)
-        node_weight = add_node_weight(G, NODE_NUM)
-        node_priority = calculate_node_priority(G, NODE_NUM)
-        strategy_profile = initialize_strategy_profile(G, NODE_NUM)
+        add_node_weight(G, NODE_NUM)
+        calculate_node_priority(G, NODE_NUM)
+        initialize_strategy_profile(G, NODE_NUM)
 
         #randomly select a node that its best response is not its strategy, iterate until graph is MIS
         move_count = 0
@@ -199,8 +198,7 @@ for p in range(5):
     for i in range(100):
         #create watts_strogatz model with 30 nodes, 4 links for each node initially
         G = nx.watts_strogatz_graph(n = NODE_NUM, k = LINK_NUM, p = probability[p])
-        adjacency = nx.to_numpy_array(G)
-        strategy_profile = initialize_strategy_profile(G, NODE_NUM)
+        initialize_strategy_profile(G, NODE_NUM)
 
         #randomly select a node that its best response is not its strategy, iterate until graph is MIS
         move_count = 0
