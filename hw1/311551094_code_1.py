@@ -140,7 +140,7 @@ LINK_NUM = 4
 probability = [p*0.2 for p in range(5)]
 
 """
-hw1-1
+hw 1-1-1
 Weighted MIS Game
 """
 average_move_count = np.zeros(5)
@@ -188,7 +188,7 @@ plt.show()
 print_graph_MIS(G)
 
 """
-hw1-2
+hw 1-1-2
 Symmetric MDS-based IDS Game
 """
 average_move_count = np.zeros(5)
