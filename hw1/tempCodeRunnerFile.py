@@ -1,1 +1,2 @@
-print(node_weight)
+
+average_total_weight = np.zeros(5)
