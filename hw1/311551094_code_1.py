@@ -200,7 +200,6 @@ for p in range(5):
         #create watts_strogatz model with 30 nodes, 4 links for each node initially
         G = nx.watts_strogatz_graph(n = NODE_NUM, k = LINK_NUM, p = probability[p])
         adjacency = nx.to_numpy_array(G)
-        node_weight = add_node_weight(G, NODE_NUM)
         strategy_profile = initialize_strategy_profile(G, NODE_NUM)
 
         #randomly select a node that its best response is not its strategy, iterate until graph is MIS
