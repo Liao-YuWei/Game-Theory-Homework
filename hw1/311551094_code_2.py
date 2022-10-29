@@ -78,8 +78,7 @@ def print_graph(G):
 
 NODE_NUM = 30
 LINK_NUM = 4
-
-probability = [p*0.2 for p in range(5)]
+PROBABILITY = [p*0.2 for p in range(5)]
 
 """
 hw 1-2
@@ -91,7 +90,7 @@ average_matched_pair = np.zeros(5)
 for p in range(5):
     for i in range(100):
         #create watts_strogatz model with 30 nodes, 4 links for each node initially
-        G = nx.watts_strogatz_graph(n = NODE_NUM, k = LINK_NUM, p = probability[p])
+        G = nx.watts_strogatz_graph(n = NODE_NUM, k = LINK_NUM, p = PROBABILITY[p])
         initialize_strategy_profile(G, NODE_NUM)
 
         #randomly select a node that its best response is not its strategy, iterate until graph is MIS
@@ -113,13 +112,13 @@ average_matched_pair /= 100
 
 plt.figure(figsize = (10, 5))
 plt.subplot(1, 2, 1) 
-plt.plot(probability,average_matched_pair)
+plt.plot(PROBABILITY,average_matched_pair)
 plt.title('Average Number of Matched Pairs')
 plt.xlabel('Link Rewiring Probability')
 plt.ylabel('Average Number of Matched Pairs')
 
 plt.subplot(1, 2, 2)
-plt.plot(probability,average_move_count)
+plt.plot(PROBABILITY,average_move_count)
 plt.title('Average Number of Moves per Node')
 plt.xlabel('Link Rewiring Probability')
 plt.ylabel('Average Number of Moves per Node')

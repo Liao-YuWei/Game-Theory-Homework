@@ -135,8 +135,7 @@ def print_graph_MDS_based_IDS(G):
 
 NODE_NUM = 30
 LINK_NUM = 4
-
-probability = [p*0.2 for p in range(5)]
+PROBABILITY = [p*0.2 for p in range(5)]
 
 """
 hw 1-1-1
@@ -148,7 +147,7 @@ average_total_weight = np.zeros(5)
 for p in range(5):
     for i in range(100):
         #create watts_strogatz model with 30 nodes, 4 links for each node initially
-        G = nx.watts_strogatz_graph(n = NODE_NUM, k = LINK_NUM, p = probability[p])
+        G = nx.watts_strogatz_graph(n = NODE_NUM, k = LINK_NUM, p = PROBABILITY[p])
         add_node_weight(G, NODE_NUM)
         calculate_node_priority(G, NODE_NUM)
         initialize_strategy_profile(G, NODE_NUM)
@@ -172,13 +171,13 @@ average_total_weight /= 100
 
 plt.figure(figsize = (10, 5))
 plt.subplot(1, 2, 1) 
-plt.plot(probability,average_total_weight)
+plt.plot(PROBABILITY,average_total_weight)
 plt.title('Average total weight')
 plt.xlabel('Link Rewiring Probability')
 plt.ylabel('Average total weight')
 
 plt.subplot(1, 2, 2)
-plt.plot(probability,average_move_count)
+plt.plot(PROBABILITY,average_move_count)
 plt.title('Average number of moves per node')
 plt.xlabel('Link Rewiring Probability')
 plt.ylabel('Average number of moves per node')
@@ -196,7 +195,7 @@ average_cardinality = np.zeros(5)
 for p in range(5):
     for i in range(100):
         #create watts_strogatz model with 30 nodes, 4 links for each node initially
-        G = nx.watts_strogatz_graph(n = NODE_NUM, k = LINK_NUM, p = probability[p])
+        G = nx.watts_strogatz_graph(n = NODE_NUM, k = LINK_NUM, p = PROBABILITY[p])
         initialize_strategy_profile(G, NODE_NUM)
 
         #randomly select a node that its best response is not its strategy, iterate until graph is MIS
@@ -218,13 +217,13 @@ average_cardinality /= 100
 
 plt.figure(figsize = (10, 5))
 plt.subplot(1, 2, 1) 
-plt.plot(probability,average_cardinality)
+plt.plot(PROBABILITY,average_cardinality)
 plt.title('Average Size of Symmetric MDS-based IDS')
 plt.xlabel('Link Rewiring Probability')
 plt.ylabel('Cardinality of Symmetric MDS-based IDS')
 
 plt.subplot(1, 2, 2)
-plt.plot(probability,average_move_count)
+plt.plot(PROBABILITY,average_move_count)
 plt.title('Average number of moves per node')
 plt.xlabel('Link Rewiring Probability')
 plt.ylabel('Average number of moves per node')
