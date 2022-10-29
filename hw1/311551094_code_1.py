@@ -1,5 +1,3 @@
-#from logging.handlers import WatchedFileHandler
-#from operator import truediv
 import networkx as nx
 import random
 import matplotlib.pyplot as plt
@@ -64,6 +62,7 @@ def calculate_total_weight(G, node_num):
 
     return total_weight
 
+#find node set that its strategy is not best response in symmetric MDS based IDS, store node as key, best response as value
 def find_waiting_node_MDS_based_IDS(G, node_num):
     waiting_nodes = {}
     for node in range(node_num):
