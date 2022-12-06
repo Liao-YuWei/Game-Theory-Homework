@@ -124,7 +124,14 @@ int main() {
             Player player2(2, {{{2, 0}, {1, 3}}}, {random_belief(), random_belief()});
             game_run(player1, player2);
         }
-            break;           
+            break;
+        
+        case 3: {   //Q3: Two or more pure-strategy NE (Conti.)
+            Player player1(1, {{{1, 0}, {0, 0}}}, {random_belief(), random_belief()});
+            Player player2(2, {{{1, 0}, {0, 0}}}, {random_belief(), random_belief()});
+            game_run(player1, player2);
+        }
+            break;
         
         default:
             std::cout << "Wrong Input!!" << std::endl;
