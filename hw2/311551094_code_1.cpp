@@ -38,7 +38,7 @@ class Player{
             return;
         }
 
-        unsigned int best_response() {
+        unsigned int respond() {
             if (payoff[0] > payoff[1])
                 return 0;
             else if (payoff[1] > payoff[0])
@@ -71,20 +71,35 @@ float random_belief() {
     return (float)(rand() % 10) + ((float)rand()/(float)(RAND_MAX));
 }
 
-BestReponse game_run(Player& player1, Player& player2) {
-    BestReponse best_respose;
+void game_run(Player& player1, Player& player2) {
+    BestReponse best_response;
+    BestReponse pre_best_response;
+    int iter = 1;
+    int converge_count = 0;
 
-    player1.print_belief_payoff();
-    player2.print_belief_payoff();
+    while(converge_count < 10 && iter <= 300) {
+        std::cout << "Iteration: " << iter << std::endl;
 
-    best_respose.p1 = player1.best_response();
-    best_respose.p2 = player2.best_response();
-    std::cout << "best response: " << best_respose.p1 << ' ' << best_respose.p2 << std::endl;
+        player1.print_belief_payoff();
+        player2.print_belief_payoff();
 
-    player1.update_belief(best_respose.p2);
-    player2.update_belief(best_respose.p1);
+        best_response.p1 = player1.respond();
+        best_response.p2 = player2.respond();
+        std::cout << "best response: " << best_response.p1 << ' ' << best_response.p2 << std::endl;
 
-    return best_respose;
+        player1.update_belief(best_response.p2);
+        player2.update_belief(best_response.p1);
+
+        if(pre_best_response.p1 == best_response.p1 && pre_best_response.p2 == best_response.p2)
+            converge_count++;
+        pre_best_response.p1 = best_response.p1;
+        pre_best_response.p2 = best_response.p2;
+        iter++;
+
+        std::cout << "--------------------------------" << std::endl;
+    }
+
+    return;
 }
 
 int main() {
@@ -97,60 +112,23 @@ int main() {
     std::cin >> question;
 
     switch (question) {
-        case 1: {   //One pure-strategy Nash Equilibrium
+        case 1: {   //Q1: One pure-strategy Nash Equilibrium
             Player player1(1, {{{-1, 1}, {0, 3}}}, {random_belief(), random_belief()});
             Player player2(2, {{{-1, 0}, {1, 3}}}, {random_belief(), random_belief()});
-
-            BestReponse pre_best_response;
-            int iter = 1;
-            int converge_count = 0;
-
-            while(converge_count < 10) {
-                BestReponse best_response;
-                std::cout << "Iteration: " << iter << std::endl;
-
-                best_response = game_run(player1, player2);
-
-                if(pre_best_response.p1 == best_response.p1 && pre_best_response.p2 == best_response.p2)
-                    converge_count++;
-                pre_best_response.p1 = best_response.p1;
-                pre_best_response.p2 = best_response.p2;
-                iter++;
-
-                std::cout << "--------------------------------" << std::endl;
-            }
+            game_run(player1, player2);
         }  
             break;
 
-    case 2: {   //Two or more pure-strategy NE
-        Player player1(1, {{{2, 1}, {0, 3}}}, {random_belief(), random_belief()});
-        Player player2(2, {{{2, 0}, {1, 3}}}, {random_belief(), random_belief()});
-
-        BestReponse pre_best_response;
-        int iter = 1;
-        int converge_count = 0;
-
-        while(converge_count < 10) {
-            BestReponse best_response;
-            std::cout << "Iteration: " << iter << std::endl;
-
-            best_response = game_run(player1, player2);
-            
-            if (pre_best_response.p1 == best_response.p1 && pre_best_response.p2 == best_response.p2)
-                converge_count++;
-            pre_best_response.p1 = best_response.p1;
-            pre_best_response.p2 = best_response.p2;
-            iter++;
-
-            std::cout << "--------------------------------" << std::endl;
+        case 2: {   //Q2: Two or more pure-strategy NE
+            Player player1(1, {{{2, 1}, {0, 3}}}, {random_belief(), random_belief()});
+            Player player2(2, {{{2, 0}, {1, 3}}}, {random_belief(), random_belief()});
+            game_run(player1, player2);
         }
-    }
-        break;
+            break;           
         
-    
-    default:
-        std::cout << "Wrong Input!!" << std::endl;
-        break;
+        default:
+            std::cout << "Wrong Input!!" << std::endl;
+            break;
     }
 
     return 0;
