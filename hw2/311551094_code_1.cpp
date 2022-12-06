@@ -58,47 +58,99 @@ class Player{
         void print_belief_payoff() const {
             std::cout << "player" << id << "'s belief: " << belief[0] << "  "   << belief[1] << std::endl;
             std::cout << "player" << id << "'s payoff: " << payoff[0] << "  " << payoff[1] << std::endl << std::endl;
-        }
-        
+        } 
+};
+
+struct BestReponse {
+    unsigned int p1;
+    unsigned int p2;
 };
 
 float random_belief() {
     //return a flaot range in [0, 10] 
-    return ((float)rand()/(float)(RAND_MAX)) * 10;
+    return (float)(rand() % 10) + ((float)rand()/(float)(RAND_MAX));
+}
+
+BestReponse game_run(Player& player1, Player& player2) {
+    BestReponse best_respose;
+
+    player1.print_belief_payoff();
+    player2.print_belief_payoff();
+
+    best_respose.p1 = player1.best_response();
+    best_respose.p2 = player2.best_response();
+    std::cout << "best response: " << best_respose.p1 << ' ' << best_respose.p2 << std::endl;
+
+    player1.update_belief(best_respose.p2);
+    player2.update_belief(best_respose.p1);
+
+    return best_respose;
 }
 
 int main() {
     srand((unsigned) time(NULL));
     std::cout << std::setprecision(2) << std::fixed;
 
-    Player player1(1, {{{-1, 1}, {0, 3}}}, {random_belief(), random_belief()});
-    Player player2(2, {{{-1, 0}, {1, 3}}}, {random_belief(), random_belief()});
+    unsigned int question;
 
-    unsigned int best_response_1, best_response_2;
-    unsigned int pre_best_response_1, pre_best_response_2;
-    int iter = 1;
-    int converge_count = 0;
+    std::cout << "Please enter which question to solve(1~9): ";
+    std::cin >> question;
 
-    while(converge_count < 5) {
-        std::cout << "Iteration: " << iter << std::endl;
+    switch (question) {
+        case 1: {   //One pure-strategy Nash Equilibrium
+            Player player1(1, {{{-1, 1}, {0, 3}}}, {random_belief(), random_belief()});
+            Player player2(2, {{{-1, 0}, {1, 3}}}, {random_belief(), random_belief()});
 
-        player1.print_belief_payoff();
-        player2.print_belief_payoff();
+            BestReponse pre_best_response;
+            int iter = 1;
+            int converge_count = 0;
 
-        best_response_1 = player1.best_response();
-        best_response_2 = player2.best_response();
-        std::cout << "best response: " << best_response_1 << ' ' << best_response_2 << std::endl;
+            while(converge_count < 10) {
+                BestReponse best_response;
+                std::cout << "Iteration: " << iter << std::endl;
 
-        player1.update_belief(best_response_2);
-        player2.update_belief(best_response_1);
+                best_response = game_run(player1, player2);
 
-        if(pre_best_response_1 == best_response_1 && pre_best_response_2 == best_response_2)
-            converge_count++;
-        pre_best_response_1 = best_response_1;
-        pre_best_response_2 = best_response_2;
-        iter++;
+                if(pre_best_response.p1 == best_response.p1 && pre_best_response.p2 == best_response.p2)
+                    converge_count++;
+                pre_best_response.p1 = best_response.p1;
+                pre_best_response.p2 = best_response.p2;
+                iter++;
 
-        std::cout << "--------------------------------" << std::endl;
+                std::cout << "--------------------------------" << std::endl;
+            }
+        }  
+            break;
+
+    case 2: {   //Two or more pure-strategy NE
+        Player player1(1, {{{2, 1}, {0, 3}}}, {random_belief(), random_belief()});
+        Player player2(2, {{{2, 0}, {1, 3}}}, {random_belief(), random_belief()});
+
+        BestReponse pre_best_response;
+        int iter = 1;
+        int converge_count = 0;
+
+        while(converge_count < 10) {
+            BestReponse best_response;
+            std::cout << "Iteration: " << iter << std::endl;
+
+            best_response = game_run(player1, player2);
+            
+            if (pre_best_response.p1 == best_response.p1 && pre_best_response.p2 == best_response.p2)
+                converge_count++;
+            pre_best_response.p1 = best_response.p1;
+            pre_best_response.p2 = best_response.p2;
+            iter++;
+
+            std::cout << "--------------------------------" << std::endl;
+        }
+    }
+        break;
+        
+    
+    default:
+        std::cout << "Wrong Input!!" << std::endl;
+        break;
     }
 
     return 0;
