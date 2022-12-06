@@ -1,9 +1,12 @@
 #include <iostream>
+#include <iomanip>
 #include <array>
+#include <cstdlib>
+#include <time.h>
 
 class Player{
     private:
-        int id;
+        unsigned int id;
         std::array<std::array<int, 2>, 2> utility;
         std::array<double, 2> belief;
         std::array<double, 2> payoff;
@@ -22,39 +25,81 @@ class Player{
         }
     
     public:
-        Player(int player_id, std::array<std::array<int, 2>, 2> game, std::array<double, 2> init_belief) {
+        Player(unsigned int player_id, std::array<std::array<int, 2>, 2> game, std::array<double, 2> init_belief) {
             id = player_id;
             std::copy(std::begin(game), std::end(game), std::begin(utility));
             std::copy(std::begin(init_belief), std::end(init_belief), std::begin(belief));
             calculate_payoff();
         }
 
-        int get_utility(int row, int col) const {
-            return utility[row][col];
-        } 
-
-        int get_belief(int strategy) const {
-            return belief[strategy];
-        }
-
-        void update_belief(int strategy) {
+        void update_belief(unsigned int strategy) {
             belief[strategy]++;
             calculate_payoff();
             return;
         }
+
+        unsigned int best_response() {
+            if (payoff[0] > payoff[1])
+                return 0;
+            else if (payoff[1] > payoff[0])
+                return 1;
+            else
+                return rand() % 2;
+        }
+
+        int get_utility(unsigned int row, unsigned int col) const {
+            return utility[row][col];
+        } 
+
+        double get_belief(unsigned int strategy) const {
+            return belief[strategy];
+        }
+
+        void print_belief_payoff() const {
+            std::cout << "player" << id << "'s belief: " << belief[0] << "  "   << belief[1] << std::endl;
+            std::cout << "player" << id << "'s payoff: " << payoff[0] << "  " << payoff[1] << std::endl << std::endl;
+        }
         
 };
 
-int main() {
-    // std::array<std::array<int, 2>, 2> player1_utility = {{{-1, 1}, {0, 3}}};
-    // std::array<std::array<int, 2>, 2> player2_utility = {{{-1, 0}, {1, 3}}};
-    // std::array<int, 2> player1_belief = {0, 0};
-    // std::array<int, 2> player2_belief = {0, 0};
-    Player player1(1, {{{-1, 1}, {0, 3}}}, {1, 2});
-    Player player2(2, {{{-1, 0}, {1, 3}}}, {4, 2});
+float random_belief() {
+    //return a flaot range in [0, 10] 
+    return ((float)rand()/(float)(RAND_MAX)) * 10;
+}
 
-    // std::cout << player1.get_utility(0, 1) << ' ' << player2.get_utility(0, 0) << std::endl;
-    // std::cout << player1.get_belief(1) << ' ' << player2.get_belief(0) << std::endl;
+int main() {
+    srand((unsigned) time(NULL));
+    std::cout << std::setprecision(2) << std::fixed;
+
+    Player player1(1, {{{-1, 1}, {0, 3}}}, {random_belief(), random_belief()});
+    Player player2(2, {{{-1, 0}, {1, 3}}}, {random_belief(), random_belief()});
+
+    unsigned int best_response_1, best_response_2;
+    unsigned int pre_best_response_1, pre_best_response_2;
+    int iter = 1;
+    int converge_count = 0;
+
+    while(converge_count < 5) {
+        std::cout << "Iteration: " << iter << std::endl;
+
+        player1.print_belief_payoff();
+        player2.print_belief_payoff();
+
+        best_response_1 = player1.best_response();
+        best_response_2 = player2.best_response();
+        std::cout << "best response: " << best_response_1 << ' ' << best_response_2 << std::endl;
+
+        player1.update_belief(best_response_2);
+        player2.update_belief(best_response_1);
+
+        if(pre_best_response_1 == best_response_1 && pre_best_response_2 == best_response_2)
+            converge_count++;
+        pre_best_response_1 = best_response_1;
+        pre_best_response_2 = best_response_2;
+        iter++;
+
+        std::cout << "--------------------------------" << std::endl;
+    }
 
     return 0;
 }
