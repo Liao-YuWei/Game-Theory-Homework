@@ -77,7 +77,7 @@ void game_run(Player& player1, Player& player2) {
     int iter = 1;
     int converge_count = 0;
 
-    while(converge_count < 100 && iter <= 3000) {
+    while(converge_count < 300 && iter <= 3000) {
         std::cout << "Iteration: " << iter << std::endl;
 
         player1.print_belief_payoff();
@@ -152,6 +152,13 @@ int main() {
         case 6: {   //Q6: Pure-Coordination Game
             Player player1(1, {{{10, 0}, {0, 10}}}, {random_belief(), random_belief()});
             Player player2(2, {{{10, 0}, {0, 10}}}, {random_belief(), random_belief()});
+            game_run(player1, player2);
+        }
+            break;
+
+        case 7: {   //Q7: Anti-Coordination game
+            Player player1(1, {{{0, 1}, {1, 0}}}, {random_belief(), random_belief()});
+            Player player2(2, {{{0, 1}, {1, 0}}}, {random_belief(), random_belief()});
             game_run(player1, player2);
         }
             break;
