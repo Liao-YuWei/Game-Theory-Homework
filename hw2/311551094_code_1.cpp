@@ -20,7 +20,6 @@ class Player{
                 payoff[0] = belief[0] * utility[0][0] + belief[1] * utility[1][0];
                 payoff[1] = belief[0] * utility[0][1] + belief[1] * utility[1][1];
             }
-            // std::cout << payoff[0] << ' ' << payoff[1] << std::endl;
             return;
         }
     
@@ -47,17 +46,10 @@ class Player{
                 return rand() % 2;
         }
 
-        // int get_utility(unsigned int row, unsigned int col) const {
-        //     return utility[row][col];
-        // } 
-
-        // double get_belief(unsigned int strategy) const {
-        //     return belief[strategy];
-        // }
-
         void print_belief_payoff() const {
             std::cout << "player" << id << "'s belief: " << belief[0] << "  "   << belief[1] << std::endl;
             std::cout << "player" << id << "'s payoff: " << payoff[0] << "  " << payoff[1] << std::endl << std::endl;
+            return;
         } 
 };
 
@@ -166,6 +158,13 @@ int main() {
         case 8: {   //Q8: Battle of the Sexes
             Player player1(1, {{{3, 0}, {0, 2}}}, {random_belief(), random_belief()});
             Player player2(2, {{{2, 0}, {0, 3}}}, {random_belief(), random_belief()});
+            game_run(player1, player2);
+        }
+            break;
+        
+        case 9: {   //Q9: Stag Hunt Game
+            Player player1(1, {{{3, 0}, {2, 1}}}, {random_belief(), random_belief()});
+            Player player2(2, {{{3, 2}, {0, 1}}}, {random_belief(), random_belief()});
             game_run(player1, player2);
         }
             break;
