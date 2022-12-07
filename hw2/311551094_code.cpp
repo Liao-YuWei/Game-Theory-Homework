@@ -58,9 +58,17 @@ struct BestReponse {
     unsigned int p2;
 };
 
-float random_belief() {
-    //return a flaot range in [0, 1000] 
-    return (float)(rand() % 1000) + ((float)rand()/(float)(RAND_MAX));
+struct Belief {
+    float strategy_1;
+    float strategy_2;
+};
+
+Belief random_belief() {
+    //return initial belief range in [0, 1000] and the sum of 2 stratgy's believes is 1000
+    Belief init_belief;
+    init_belief.strategy_1 = (float)(rand() % 1000) + ((float)rand()/(float)(RAND_MAX));
+    init_belief.strategy_2 = 1000 - init_belief.strategy_1;
+    return init_belief;
 }
 
 void game_run(Player& player1, Player& player2) {
@@ -105,66 +113,70 @@ int main() {
     std::cout << "Please enter which question to solve(1~9): ";
     std::cin >> question;
 
+    Belief player1_init_belief, player2_init_belief;
+    player1_init_belief = random_belief();
+    player2_init_belief = random_belief();
+
     switch (question) {
         case 1: {   //Q1: One pure-strategy Nash Equilibrium
-            Player player1(1, {{{-1, 1}, {0, 3}}}, {random_belief(), random_belief()});
-            Player player2(2, {{{-1, 0}, {1, 3}}}, {random_belief(), random_belief()});
+            Player player1(1, {{{-1, 1}, {0, 3}}}, {player1_init_belief.strategy_1, player1_init_belief.strategy_2});
+            Player player2(2, {{{-1, 0}, {1, 3}}}, {player2_init_belief.strategy_1, player2_init_belief.strategy_2});
             game_run(player1, player2);
         }  
             break;
 
         case 2: {   //Q2: Two or more pure-strategy NE
-            Player player1(1, {{{2, 1}, {0, 3}}}, {random_belief(), random_belief()});
-            Player player2(2, {{{2, 0}, {1, 3}}}, {random_belief(), random_belief()});
+            Player player1(1, {{{2, 1}, {0, 3}}}, {player1_init_belief.strategy_1, player1_init_belief.strategy_2});
+            Player player2(2, {{{2, 0}, {1, 3}}}, {player2_init_belief.strategy_1, player2_init_belief.strategy_2});
             game_run(player1, player2);
         }
             break;
         
         case 3: {   //Q3: Two or more pure-strategy NE (Conti.)
-            Player player1(1, {{{1, 0}, {0, 0}}}, {random_belief(), random_belief()});
-            Player player2(2, {{{1, 0}, {0, 0}}}, {random_belief(), random_belief()});
+            Player player1(1, {{{1, 0}, {0, 0}}}, {player1_init_belief.strategy_1, player1_init_belief.strategy_2});
+            Player player2(2, {{{1, 0}, {0, 0}}}, {player2_init_belief.strategy_1, player2_init_belief.strategy_2});
             game_run(player1, player2);
         }
             break;
         
         case 4: {   //Q4: Mixed-Strategy Nash Equilibrium
-            Player player1(1, {{{0, 2}, {2, 0}}}, {random_belief(), random_belief()});
-            Player player2(2, {{{1, 0}, {0, 4}}}, {random_belief(), random_belief()});
+            Player player1(1, {{{0, 2}, {2, 0}}}, {player1_init_belief.strategy_1, player1_init_belief.strategy_2});
+            Player player2(2, {{{1, 0}, {0, 4}}}, {player2_init_belief.strategy_1, player2_init_belief.strategy_2});
             game_run(player1, player2);
         }
             break;
 
         case 5: {   //Q5: Best-reply path
-            Player player1(1, {{{0, 1}, {1, 0}}}, {random_belief(), random_belief()});
-            Player player2(2, {{{1, 0}, {0, 1}}}, {random_belief(), random_belief()});
+            Player player1(1, {{{0, 1}, {1, 0}}}, {player1_init_belief.strategy_1, player1_init_belief.strategy_2});
+            Player player2(2, {{{1, 0}, {0, 1}}}, {player2_init_belief.strategy_1, player2_init_belief.strategy_2});
             game_run(player1, player2);
         }
             break;
 
         case 6: {   //Q6: Pure-Coordination Game
-            Player player1(1, {{{10, 0}, {0, 10}}}, {random_belief(), random_belief()});
-            Player player2(2, {{{10, 0}, {0, 10}}}, {random_belief(), random_belief()});
+            Player player1(1, {{{10, 0}, {0, 10}}}, {player1_init_belief.strategy_1, player1_init_belief.strategy_2});
+            Player player2(2, {{{10, 0}, {0, 10}}}, {player2_init_belief.strategy_1, player2_init_belief.strategy_2});
             game_run(player1, player2);
         }
             break;
 
         case 7: {   //Q7: Anti-Coordination game
-            Player player1(1, {{{0, 1}, {1, 0}}}, {random_belief(), random_belief()});
-            Player player2(2, {{{0, 1}, {1, 0}}}, {random_belief(), random_belief()});
+            Player player1(1, {{{0, 1}, {1, 0}}}, {player1_init_belief.strategy_1, player1_init_belief.strategy_2});
+            Player player2(2, {{{0, 1}, {1, 0}}}, {player2_init_belief.strategy_1, player2_init_belief.strategy_2});
             game_run(player1, player2);
         }
             break;
 
         case 8: {   //Q8: Battle of the Sexes
-            Player player1(1, {{{3, 0}, {0, 2}}}, {random_belief(), random_belief()});
-            Player player2(2, {{{2, 0}, {0, 3}}}, {random_belief(), random_belief()});
+            Player player1(1, {{{3, 0}, {0, 2}}}, {player1_init_belief.strategy_1, player1_init_belief.strategy_2});
+            Player player2(2, {{{2, 0}, {0, 3}}}, {player2_init_belief.strategy_1, player2_init_belief.strategy_2});
             game_run(player1, player2);
         }
             break;
         
         case 9: {   //Q9: Stag Hunt Game
-            Player player1(1, {{{3, 0}, {2, 1}}}, {random_belief(), random_belief()});
-            Player player2(2, {{{3, 2}, {0, 1}}}, {random_belief(), random_belief()});
+            Player player1(1, {{{3, 0}, {2, 1}}}, {player1_init_belief.strategy_1, player1_init_belief.strategy_2});
+            Player player2(2, {{{3, 2}, {0, 1}}}, {player2_init_belief.strategy_1, player2_init_belief.strategy_2});
             game_run(player1, player2);
         }
             break;
