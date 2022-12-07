@@ -67,8 +67,8 @@ struct BestReponse {
 };
 
 float random_belief() {
-    //return a flaot range in [0, 100] 
-    return (float)(rand() % 100) + ((float)rand()/(float)(RAND_MAX));
+    //return a flaot range in [0, 1000] 
+    return (float)(rand() % 1000) + ((float)rand()/(float)(RAND_MAX));
 }
 
 void game_run(Player& player1, Player& player2) {
@@ -77,7 +77,7 @@ void game_run(Player& player1, Player& player2) {
     int iter = 1;
     int converge_count = 0;
 
-    while(converge_count < 300 && iter <= 3000) {
+    while(converge_count < 1000 && iter <= 6000) {
         std::cout << "Iteration: " << iter << std::endl;
 
         player1.print_belief_payoff();
@@ -159,6 +159,13 @@ int main() {
         case 7: {   //Q7: Anti-Coordination game
             Player player1(1, {{{0, 1}, {1, 0}}}, {random_belief(), random_belief()});
             Player player2(2, {{{0, 1}, {1, 0}}}, {random_belief(), random_belief()});
+            game_run(player1, player2);
+        }
+            break;
+
+        case 8: {   //Q8: Battle of the Sexes
+            Player player1(1, {{{3, 0}, {0, 2}}}, {random_belief(), random_belief()});
+            Player player2(2, {{{2, 0}, {0, 3}}}, {random_belief(), random_belief()});
             game_run(player1, player2);
         }
             break;
