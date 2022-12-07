@@ -77,7 +77,7 @@ void game_run(Player& player1, Player& player2) {
     int iter = 1;
     int converge_count = 0;
 
-    while(converge_count < 1000 && iter <= 6000) {
+    while(converge_count < 1000 && iter <= 3000) {
         std::cout << "Iteration: " << iter << std::endl;
 
         player1.print_belief_payoff();
