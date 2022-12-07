@@ -148,6 +148,13 @@ int main() {
             game_run(player1, player2);
         }
             break;
+
+        case 6: {   //Q6: Pure-Coordination Game
+            Player player1(1, {{{10, 0}, {0, 10}}}, {random_belief(), random_belief()});
+            Player player2(2, {{{10, 0}, {0, 10}}}, {random_belief(), random_belief()});
+            game_run(player1, player2);
+        }
+            break;
         
         default:
             std::cout << "Wrong Input!!" << std::endl;
