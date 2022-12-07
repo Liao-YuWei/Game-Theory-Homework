@@ -47,13 +47,13 @@ class Player{
                 return rand() % 2;
         }
 
-        int get_utility(unsigned int row, unsigned int col) const {
-            return utility[row][col];
-        } 
+        // int get_utility(unsigned int row, unsigned int col) const {
+        //     return utility[row][col];
+        // } 
 
-        double get_belief(unsigned int strategy) const {
-            return belief[strategy];
-        }
+        // double get_belief(unsigned int strategy) const {
+        //     return belief[strategy];
+        // }
 
         void print_belief_payoff() const {
             std::cout << "player" << id << "'s belief: " << belief[0] << "  "   << belief[1] << std::endl;
@@ -67,8 +67,8 @@ struct BestReponse {
 };
 
 float random_belief() {
-    //return a flaot range in [0, 10] 
-    return (float)(rand() % 10) + ((float)rand()/(float)(RAND_MAX));
+    //return a flaot range in [0, 100] 
+    return (float)(rand() % 100) + ((float)rand()/(float)(RAND_MAX));
 }
 
 void game_run(Player& player1, Player& player2) {
@@ -77,7 +77,7 @@ void game_run(Player& player1, Player& player2) {
     int iter = 1;
     int converge_count = 0;
 
-    while(converge_count < 10 && iter <= 300) {
+    while(converge_count < 100 && iter <= 3000) {
         std::cout << "Iteration: " << iter << std::endl;
 
         player1.print_belief_payoff();
@@ -92,6 +92,8 @@ void game_run(Player& player1, Player& player2) {
 
         if(pre_best_response.p1 == best_response.p1 && pre_best_response.p2 == best_response.p2)
             converge_count++;
+        else
+            converge_count = 0;
         pre_best_response.p1 = best_response.p1;
         pre_best_response.p2 = best_response.p2;
         iter++;
@@ -129,6 +131,20 @@ int main() {
         case 3: {   //Q3: Two or more pure-strategy NE (Conti.)
             Player player1(1, {{{1, 0}, {0, 0}}}, {random_belief(), random_belief()});
             Player player2(2, {{{1, 0}, {0, 0}}}, {random_belief(), random_belief()});
+            game_run(player1, player2);
+        }
+            break;
+        
+        case 4: {   //Q4: Mixed-Strategy Nash Equilibrium
+            Player player1(1, {{{0, 2}, {2, 0}}}, {random_belief(), random_belief()});
+            Player player2(2, {{{1, 0}, {0, 4}}}, {random_belief(), random_belief()});
+            game_run(player1, player2);
+        }
+            break;
+
+        case 5: {   //Q5: Best-reply path
+            Player player1(1, {{{0, 1}, {1, 0}}}, {random_belief(), random_belief()});
+            Player player2(2, {{{1, 0}, {0, 1}}}, {random_belief(), random_belief()});
             game_run(player1, player2);
         }
             break;
